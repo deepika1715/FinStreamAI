@@ -37,7 +37,7 @@ Trained on 284,807 real credit card transactions. Achieves 97.47% ROC-AUC.
 | Streaming | Apache Kafka |
 | Containerisation | Docker + Docker Compose |
 | Orchestration | Kubernetes (Minikube) |
-| Monitoring | Prometheus metrics |
+| Monitoring | Prometheus + Grafana |
 | CI/CD | GitHub Actions |
 | Experiment Tracking | MLflow |
 
@@ -159,10 +159,47 @@ pytest tests/ -v
 2. Consumer picks up each transaction and calls the FastAPI `/predict` endpoint
 3. XGBoost scores the transaction — returns fraud probability in ~55ms
 4. Risk level assigned — LOW, MEDIUM, or HIGH
-5. Prometheus records every request and latency
-6. Grafana (optional) visualises fraud rates on live dashboards
+5. Prometheus scrapes `/metrics` every 15 seconds
+6. Grafana dashboard displays fraud vs legitimate requests, latency, and total volume in real time
+7. Kubernetes runs 2 replicas of the API — if one pod crashes, the other keeps serving traffic
 
 ---
+
+## Monitoring
+
+Prometheus and Grafana are included in the Docker Compose stack.
+
+Start the full stack:
+```bash
+docker compose up -d
+```
+
+| Service | URL |
+|---|---|
+| Fraud API | http://localhost:8000 |
+| Prometheus | http://localhost:9090 |
+| Grafana | http://localhost:3000 |
+
+Grafana login: admin / admin
+
+The **FinStreamAI — Fraud Detection** dashboard includes:
+- API Requests — total transactions scored over time
+- API Request Latency — processing time and traffic bursts
+- Fraud vs Legitimate Requests — real-time fraud rate split
+
+## Kubernetes
+
+Deploy to local Kubernetes with Minikube:
+```bash
+minikube start
+minikube image load finstreamai-fraud-api:latest
+kubectl apply -f k8s/fraud-api-deployment.yaml
+kubectl apply -f k8s/fraud-api-service.yaml
+minikube service fraud-api-service --url
+```
+
+Runs 2 replicas for high availability — if one pod crashes, traffic automatically routes to the other.
+
 
 ## Dataset
 
