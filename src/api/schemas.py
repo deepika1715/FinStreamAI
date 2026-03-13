@@ -60,7 +60,7 @@ class PredictionResponse(BaseModel):
     fraud_probability: float = Field(..., description="Probability of fraud (0.0 to 1.0)")
     risk_level: str = Field(..., description="LOW, MEDIUM, or HIGH")
     amount: float = Field(..., description="Transaction amount from input")
-    model_version: str = Field(default="xgboost-v1")
+    api_model_version: str = Field(default="xgboost-v1")
 
 
 class HealthResponse(BaseModel):

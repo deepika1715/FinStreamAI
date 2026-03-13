@@ -65,7 +65,7 @@ def test_predict_response_structure():
     assert "fraud_probability" in data
     assert "risk_level" in data
     assert "amount" in data
-    assert "model_version" in data
+    assert "api_model_version" in data
 
 def test_predict_invalid_request():
     response = client.post("/predict", json={"invalid": "data"})

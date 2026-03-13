@@ -99,7 +99,7 @@ def predict(transaction: TransactionRequest):
         fraud_probability=round(fraud_prob, 4),
         risk_level=risk_level,
         amount=transaction.Amount,
-        model_version="xgboost-v1"
+        api_model_version="xgboost-v1"
     )
 
 @app.get("/metrics")
