@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
 from starlette.responses import Response
 from src.api.schemas import TransactionRequest, PredictionResponse, HealthResponse
+from src.monitoring.prediction_logger import init_db, log_prediction
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -28,6 +29,10 @@ except Exception as e:
     feature_names = []
     model_loaded = False
     logger.error(f"Failed to load model: {e}")
+
+# ── Initialise prediction database ───────────────────────────────────────────
+init_db()
+logger.info("Prediction database initialised")
 
 # ── Prometheus metrics ────────────────────────────────────────────────────────
 REQUEST_COUNT = Counter(
@@ -93,6 +98,14 @@ def predict(transaction: TransactionRequest):
             f"Transaction scored — amount: £{transaction.Amount:.2f}, "
             f"fraud_prob: {fraud_prob:.4f}, risk: {risk_level}"
         )
+
+    # Log prediction to SQLite database
+    log_prediction(
+        amount=transaction.Amount,
+        fraud_probability=round(fraud_prob, 4),
+        risk_level=risk_level,
+        is_fraud=is_fraud
+    )
 
     return PredictionResponse(
         is_fraud=is_fraud,
