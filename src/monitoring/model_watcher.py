@@ -16,10 +16,14 @@ CANDIDATE_PATH   = 'models/fraud_model_candidate.pkl'
 FEATURES_PATH    = 'models/feature_names.pkl'
 
 # ── Prometheus counter ────────────────────────────────────────────────────────
-MODEL_SWAPS = Counter(
-    'fraud_api_model_swaps_total',
-    'Total number of zero-downtime model swaps performed'
-)
+try:
+    MODEL_SWAPS = Counter(
+        'fraud_api_model_swaps_total',
+        'Total zero-downtime model swaps performed'
+    )
+except ValueError:
+    from prometheus_client import REGISTRY
+    MODEL_SWAPS = REGISTRY._names_to_collectors.get('fraud_api_model_swaps_total')
 
 class ModelWatcher:
     """

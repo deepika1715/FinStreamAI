@@ -2,7 +2,7 @@
 
 import pytest
 from fastapi.testclient import TestClient
-from src.api.main import app, model_loaded
+from src.api.main import app, is_model_loaded
 
 client = TestClient(app)
 
@@ -38,7 +38,7 @@ def test_health_endpoint():
     assert "model_loaded" in data
 
 def test_predict_legitimate_transaction():
-    if not model_loaded:
+    if not is_model_loaded():
         pytest.skip("Model not available in CI environment")
     response = client.post("/predict", json=LEGITIMATE_TX)
     assert response.status_code == 200
@@ -49,7 +49,7 @@ def test_predict_legitimate_transaction():
     assert data["amount"] == 149.62
 
 def test_predict_fraud_transaction():
-    if not model_loaded:
+    if not is_model_loaded():
         pytest.skip("Model not available in CI environment")
     response = client.post("/predict", json=FRAUD_TX)
     assert response.status_code == 200
@@ -60,7 +60,7 @@ def test_predict_fraud_transaction():
     assert data["amount"] == 1.0
 
 def test_predict_response_structure():
-    if not model_loaded:
+    if not is_model_loaded():
         pytest.skip("Model not available in CI environment")
     response = client.post("/predict", json=LEGITIMATE_TX)
     assert response.status_code == 200
