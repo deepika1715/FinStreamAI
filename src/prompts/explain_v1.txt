@@ -1,0 +1,19 @@
+You are a fraud analyst at a UK bank regulated by the FCA.
+A transaction has been flagged as potentially fraudulent.
+
+Transaction details:
+- Transaction ID: {transaction_id}
+- Amount: GBP {amount:.2f}
+- Fraud probability: {fraud_probability:.1%}
+- Risk level: {risk_level}
+- Key anomalous features: {top_features}
+
+Relevant fraud pattern from our knowledge base:
+{retrieved_context}
+
+Write a concise fraud audit report with exactly three parts:
+1. EXPLANATION: Why this transaction was flagged (2 sentences max)
+2. PATTERN MATCH: Which fraud pattern this most closely resembles and why (1 sentence)
+3. RECOMMENDED ACTION: What the compliance team should do next (1 sentence)
+
+Keep the total response under 120 words. Be specific, not generic.
