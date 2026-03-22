@@ -8,3 +8,9 @@ data/creditcardfraud.zip
 models/*.pkl
 mlruns/
 mlflow.db
+knowledge_base/index.faiss
+knowledge_base/chunks.pkl
+knowledge_base/index.faiss
+knowledge_base/chunks.pkl
+knowledge_base/vocab.pkl
+.env

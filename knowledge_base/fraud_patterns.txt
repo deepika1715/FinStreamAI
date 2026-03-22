@@ -1,0 +1,35 @@
+PATTERN: Card Testing
+Card testing is a fraud technique where criminals use automated bots to make small, low-value purchases on stolen card numbers to verify which cards are active and have sufficient funds. Transactions typically range from £0.01 to £2.00. The defining characteristic is high velocity — dozens of attempts in minutes across different merchants. Common merchant categories include digital goods, streaming subscriptions, and charity donations where cards are processed without physical presence. Risk indicators: Amount below £2.00, more than 5 transactions in 10 minutes from the same card or IP, different merchant IDs.
+
+PATTERN: Account Takeover (ATO)
+Account takeover occurs when a fraudster gains unauthorised access to a legitimate customer account, typically through credential stuffing or phishing. After gaining access, the fraudster changes contact details (email, phone) before making high-value purchases or withdrawals. Behavioural indicators: login from new device or unusual geography, contact detail change followed within 24 hours by a transaction, sudden spike in transaction amount compared to the account's historical average. The key distinguishing feature is the behavioural shift — same account, dramatically different transaction pattern.
+
+PATTERN: Card-Not-Present (CNP) Fraud
+Card-not-present fraud occurs in online or phone transactions where the physical card is not required. A stolen card number, expiry date, and CVV are sufficient. High-risk merchant categories include electronics retailers, travel booking, luxury goods, and digital gift cards. CNP fraud transactions often show: billing and shipping address mismatch, first-time merchant for the cardholder, high-value single transaction, and orders placed outside the cardholder's typical hours. CVV mismatches or multiple CVV attempts on the same card number are strong indicators.
+
+PATTERN: Velocity Abuse
+Velocity abuse involves making an unusually high number of transactions in a short time window, often to drain an account before the fraud is detected. Unlike card testing (which uses low amounts), velocity abuse typically uses moderate to high amounts. Key indicators: more than 3 transactions in 5 minutes, cumulative transaction amount exceeding 3x the account's 30-day average daily spend, transactions across multiple merchant categories in rapid succession. Often seen in conjunction with account takeover.
+
+PATTERN: Synthetic Identity Fraud
+Synthetic identity fraud involves creating a fictitious identity by combining real and fabricated information — typically a real Social Security or National Insurance number with a fake name and date of birth. The fraudster builds credit history slowly over months before executing a bust-out: maxing all available credit lines simultaneously and disappearing. Indicators: account age less than 6 months, rapid credit utilisation increase from below 20% to above 90% within 30 days, multiple new account openings in a short period, no physical address history.
+
+PATTERN: First-Party Fraud (Bust-Out)
+First-party fraud occurs when the actual account holder commits fraud, typically by running up credit and then defaulting intentionally. Unlike other fraud types, the customer is legitimate — the fraud is the intent to not repay. Behavioural pattern: gradual build-up of credit over several months, followed by a sudden spike in spending across multiple categories, often with cash advances, followed by missed payments. The transaction pattern looks normal until the bust-out event. Risk signals: simultaneous use of multiple credit products, cash advances representing more than 30% of spend, sudden change in spending categories.
+
+PATTERN: Friendly Fraud (Chargeback Fraud)
+Friendly fraud occurs when a legitimate cardholder makes a genuine purchase but later files a false chargeback claiming the transaction was unauthorised. The merchant loses both the goods and the payment. Indicators: repeated chargebacks from the same customer across multiple merchants, chargebacks on digital goods (no physical delivery to dispute), disputes filed within 24 hours of delivery, high-value orders with expedited shipping suggesting deliberate intent to receive goods before the chargeback is processed.
+
+PATTERN: Triangulation Fraud
+Triangulation fraud involves three parties: the fraudster, a legitimate customer, and a merchant. The fraudster sets up a fake online store selling goods at attractive prices. When a customer orders, the fraudster uses stolen card data to purchase the real goods from a legitimate merchant and ship to the customer. The legitimate customer is unaware, and the stolen cardholder is charged. Indicators: purchases at legitimate retailers shipping to addresses not associated with the cardholder, orders placed seconds after a corresponding order on a fraudulent marketplace.
+
+PATTERN: Geographic Anomaly
+Geographic anomaly fraud occurs when a transaction is made in a location inconsistent with the cardholder's known geography. This includes transactions in foreign countries the cardholder has never visited, or impossible travel — transactions in two distant locations within a timeframe that makes physical travel impossible. Risk indicators: transaction country differs from account registration country, two transactions more than 500 miles apart within 2 hours, transaction in a country flagged as high-risk for financial crime by the FCA or FATF.
+
+PATTERN: Mule Account Activity
+Money mule accounts are used by criminal networks to receive and transfer illicit funds. Account holders may be unwitting victims recruited through scams, or willing participants. Indicators: receiving multiple small deposits from different sources followed by immediate large withdrawals, receiving funds and immediately transferring 90% or more to another account, account funded exclusively by transfers with no salary or regular income, sudden change in transaction volume on a previously low-activity account.
+
+PATTERN: Digital Skimming (Magecart)
+Digital skimming involves injecting malicious JavaScript into e-commerce checkout pages to steal card details at point of entry. Indicators: multiple cardholders who transacted at the same merchant within a 2-week window all showing fraud shortly after, fraudulent transactions appearing 1 to 7 days after the legitimate merchant transaction, fraud concentrated on card-not-present transactions at specific merchant IDs.
+
+PATTERN: Refund Fraud
+Refund fraud involves manipulating the returns and refunds process to receive cash or goods without a legitimate return. Methods include returning stolen merchandise, claiming non-delivery on delivered items, or receiving multiple refunds on a single return. Indicators: high refund-to-purchase ratio above 15%, refunds requested to a different payment method than the original purchase, refund requests on high-value items within 24 hours of purchase, multiple refund requests from the same account in a 30-day window.
