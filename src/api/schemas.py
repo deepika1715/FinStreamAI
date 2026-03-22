@@ -68,3 +68,36 @@ class HealthResponse(BaseModel):
     status: str
     model_loaded: bool
     kafka_available: bool
+
+class ExplainRequest(BaseModel):
+    """Input schema for the /explain endpoint."""
+    transaction_id: str = Field(..., description="Unique transaction reference")
+    fraud_probability: float = Field(..., description="Score from /predict (0.0 to 1.0)")
+    risk_level: str = Field(..., description="LOW, MEDIUM, or HIGH from /predict")
+    amount: float = Field(..., description="Transaction amount")
+    top_features: dict = Field(
+        default_factory=dict,
+        description="Key transaction features e.g. {'V14': -4.2, 'V12': -3.1}"
+    )
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "transaction_id": "TXN-20240315-001",
+                "fraud_probability": 0.9988,
+                "risk_level": "HIGH",
+                "amount": 149.62,
+                "top_features": {"V14": -4.2, "V12": -3.1, "V4": 2.8, "V10": -2.5}
+            }
+        }
+
+
+class ExplainResponse(BaseModel):
+    """Output schema for the /explain endpoint — FCA-ready audit report."""
+    transaction_id: str
+    explanation: str = Field(..., description="Plain-English fraud analyst report")
+    matched_pattern: str = Field(..., description="Closest fraud pattern from knowledge base")
+    recommended_action: str = Field(..., description="Compliance team next step")
+    confidence: str = Field(..., description="HIGH, MEDIUM, or LOW explanation confidence")
+    prompt_version: str = Field(default="explain_v1")
+    retrieved_context_preview: str = Field(..., description="First 120 chars of retrieved pattern")

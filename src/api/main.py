@@ -139,3 +139,40 @@ def predict(transaction: TransactionRequest):
 def metrics():
     """Prometheus metrics endpoint."""
     return Response(generate_latest(), media_type=CONTENT_TYPE_LATEST)
+
+# ── LLMOps: /explain endpoint ─────────────────────────────────────────────────
+from src.api.schemas import ExplainRequest, ExplainResponse
+from src.llmops.explainer import FraudExplainer
+
+_explainer = FraudExplainer()
+
+EXPLAIN_COUNT = Counter(
+    "fraud_api_explain_requests_total",
+    "Total explanation requests",
+    ["confidence"]
+)
+
+@app.post("/explain", response_model=ExplainResponse)
+def explain(request: ExplainRequest):
+    """
+    Generate a plain-English FCA-ready audit report for a flagged transaction.
+    Uses RAG retrieval from the fraud pattern knowledge base + Claude API.
+    """
+    try:
+        result = _explainer.explain(
+            transaction_id=request.transaction_id,
+            fraud_probability=request.fraud_probability,
+            risk_level=request.risk_level,
+            amount=request.amount,
+            top_features=request.top_features,
+        )
+        EXPLAIN_COUNT.labels(confidence=result["confidence"]).inc()
+        logger.info(
+            f"Explanation generated - txn: {request.transaction_id}, "
+            f"confidence: {result['confidence']}, "
+            f"pattern: {result['matched_pattern'][:40]}"
+        )
+        return ExplainResponse(**result)
+    except Exception as e:
+        logger.error(f"Explanation failed: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
