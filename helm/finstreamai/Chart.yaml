@@ -1,0 +1,19 @@
+apiVersion: v2
+name: finstreamai
+description: Production LLMOps fraud detection stack - Kafka, FastAPI, XGBoost, RAG, Audit Reports, Prometheus, Grafana
+type: application
+version: 0.1.0
+appVersion: "2.0.0"
+keywords:
+  - mlops
+  - llmops
+  - fraud-detection
+  - fastapi
+  - kafka
+  - kubernetes
+home: https://github.com/deepika1715/FinStreamAI
+sources:
+  - https://github.com/deepika1715/FinStreamAI
+maintainers:
+  - name: Deepika Sharma
+    url: https://github.com/deepika1715

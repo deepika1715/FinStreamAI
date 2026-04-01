@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-config
+  namespace: {{ .Values.namespace }}
+data:
+  FRAUD_THRESHOLD: {{ .Values.fraudApi.model.threshold | quote }}
+  MODEL_VERSION: {{ .Values.fraudApi.model.version | quote }}
+  LLMOPS_ENABLED: {{ .Values.llmops.enabled | quote }}
+  PROMPT_VERSION: {{ .Values.llmops.promptVersion | quote }}
+  TRACING_ENABLED: {{ .Values.llmops.tracing.enabled | quote }}
+  MLFLOW_BACKEND_STORE: {{ .Values.mlflow.backendStore | quote }}
+  KAFKA_ENABLED: {{ .Values.kafka.enabled | quote }}
+  PROMETHEUS_SCRAPE_INTERVAL: {{ .Values.monitoring.prometheus.scrapeInterval | quote }}

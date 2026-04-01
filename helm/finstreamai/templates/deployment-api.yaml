@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-fraud-api
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Release.Name }}-fraud-api
+    version: {{ .Values.fraudApi.model.version }}
+    component: api
+spec:
+  replicas: {{ .Values.fraudApi.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-fraud-api
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-fraud-api
+    spec:
+      containers:
+        - name: fraud-api
+          image: {{ .Values.fraudApi.image.repository }}:{{ .Values.fraudApi.image.tag }}
+          imagePullPolicy: {{ .Values.fraudApi.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.fraudApi.service.port }}
+          env:
+            - name: MODEL_VERSION
+              value: {{ .Values.fraudApi.model.version | quote }}
+            - name: FRAUD_THRESHOLD
+              value: {{ .Values.fraudApi.model.threshold | quote }}
+            - name: LLMOPS_ENABLED
+              value: {{ .Values.llmops.enabled | quote }}
+            - name: PROMPT_VERSION
+              value: {{ .Values.llmops.promptVersion | quote }}
+          resources:
+            requests:
+              memory: {{ .Values.fraudApi.resources.requests.memory | quote }}
+              cpu: {{ .Values.fraudApi.resources.requests.cpu | quote }}
+            limits:
+              memory: {{ .Values.fraudApi.resources.limits.memory | quote }}
+              cpu: {{ .Values.fraudApi.resources.limits.cpu | quote }}
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.fraudApi.service.port }}
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.fraudApi.service.port }}
+            initialDelaySeconds: 10
+            periodSeconds: 5

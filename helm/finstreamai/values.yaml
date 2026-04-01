@@ -1,0 +1,70 @@
+# FinStreamAI Helm Chart — Default Values
+# Override any value with: helm install finstreamai . --set key=value
+
+# ── Fraud API ─────────────────────────────────────────────────────────────────
+fraudApi:
+  replicaCount: 2
+  image:
+    repository: finstreamai-fraud-api
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    type: LoadBalancer
+    port: 8000
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "250m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+  model:
+    threshold: 0.5
+    version: "xgboost-v1"
+
+# ── Kafka ─────────────────────────────────────────────────────────────────────
+kafka:
+  enabled: true
+  replicaCount: 1
+  service:
+    port: 9092
+  retention: "7d"
+
+# ── Monitoring ────────────────────────────────────────────────────────────────
+monitoring:
+  enabled: true
+  prometheus:
+    port: 9090
+    scrapeInterval: "15s"
+  grafana:
+    enabled: true
+    port: 3000
+    adminPassword: "admin"
+
+# ── LLMOps layer ─────────────────────────────────────────────────────────────
+llmops:
+  enabled: true
+  promptVersion: "explain_v1"
+  tracing:
+    enabled: true
+  evaluation:
+    enabled: true
+    schedule: "0 2 * * *"  # 2am daily
+
+# ── MLflow ────────────────────────────────────────────────────────────────────
+mlflow:
+  enabled: true
+  backendStore: "sqlite:///mlflow.db"
+  port: 5001
+
+# ── Demo UI ───────────────────────────────────────────────────────────────────
+demo:
+  enabled: true
+  service:
+    type: LoadBalancer
+    port: 8501
+
+# ── Global ────────────────────────────────────────────────────────────────────
+nameOverride: ""
+fullnameOverride: ""
+namespace: finstreamai
