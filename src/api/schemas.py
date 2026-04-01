@@ -36,8 +36,8 @@ class TransactionRequest(BaseModel):
     V28: float
     Amount: float = Field(..., description="Transaction amount in dollars")
 
-    class Config:
-        json_schema_extra = {
+    model_config = {
+        "json_schema_extra": {
             "example": {
                 "Time": 0.0,
                 "V1": -1.359807, "V2": -0.072781, "V3": 2.536347,
@@ -52,6 +52,7 @@ class TransactionRequest(BaseModel):
                 "V28": -0.021053, "Amount": 149.62
             }
         }
+    }
 
 
 class PredictionResponse(BaseModel):
@@ -80,8 +81,8 @@ class ExplainRequest(BaseModel):
         description="Key transaction features e.g. {'V14': -4.2, 'V12': -3.1}"
     )
 
-    class Config:
-        json_schema_extra = {
+    model_config = {
+        "json_schema_extra": {
             "example": {
                 "transaction_id": "TXN-20240315-001",
                 "fraud_probability": 0.9988,
@@ -90,6 +91,7 @@ class ExplainRequest(BaseModel):
                 "top_features": {"V14": -4.2, "V12": -3.1, "V4": 2.8, "V10": -2.5}
             }
         }
+    }
 
 
 class ExplainResponse(BaseModel):
