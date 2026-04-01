@@ -156,8 +156,13 @@ EXPLAIN_COUNT = Counter(
 def explain(request: ExplainRequest):
     """
     Generate a plain-English FCA-ready audit report for a flagged transaction.
-    Uses RAG retrieval from the fraud pattern knowledge base + Claude API.
+    Uses RAG retrieval from the fraud pattern knowledge base.
+    Every call is traced to traces/explain_traces.jsonl.
     """
+    import time
+    from src.llmops.tracer import log_trace
+
+    t_start = time.monotonic()
     try:
         result = _explainer.explain(
             transaction_id=request.transaction_id,
@@ -166,11 +171,28 @@ def explain(request: ExplainRequest):
             amount=request.amount,
             top_features=request.top_features,
         )
+        latency_ms = (time.monotonic() - t_start) * 1000
+
+        trace_id = log_trace(
+            transaction_id=request.transaction_id,
+            fraud_probability=request.fraud_probability,
+            risk_level=request.risk_level,
+            amount=request.amount,
+            top_features=request.top_features,
+            retrieved_pattern=result["retrieved_context_preview"],
+            explanation=result["explanation"],
+            matched_pattern=result["matched_pattern"],
+            confidence=result["confidence"],
+            prompt_version=result["prompt_version"],
+            latency_ms=latency_ms,
+        )
+
         EXPLAIN_COUNT.labels(confidence=result["confidence"]).inc()
         logger.info(
             f"Explanation generated - txn: {request.transaction_id}, "
             f"confidence: {result['confidence']}, "
-            f"pattern: {result['matched_pattern'][:40]}"
+            f"latency: {latency_ms:.0f}ms, "
+            f"trace: {trace_id}"
         )
         return ExplainResponse(**result)
     except Exception as e:

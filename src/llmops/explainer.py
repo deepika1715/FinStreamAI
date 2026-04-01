@@ -17,6 +17,11 @@ import numpy as np
 
 logger = logging.getLogger(__name__)
 
+# Tracer import — lazy to avoid circular imports
+def _get_tracer():
+    from src.llmops.tracer import log_trace
+    return log_trace
+
 KB_DIR      = Path(__file__).parent.parent.parent / "knowledge_base"
 INDEX_FILE  = KB_DIR / "index.faiss"
 CHUNKS_FILE = KB_DIR / "chunks.pkl"

@@ -15,3 +15,4 @@ knowledge_base/chunks.pkl
 knowledge_base/vocab.pkl
 .env
 data/predictions.db
+traces/
