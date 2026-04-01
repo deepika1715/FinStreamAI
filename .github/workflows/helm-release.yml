@@ -5,11 +5,14 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
 jobs:
   release:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -26,9 +29,15 @@ jobs:
         with:
           version: v3.20.1
 
-      - name: Run chart-releaser
+      - name: Package Helm chart
+        run: |
+          mkdir -p .cr-release-packages
+          helm package helm/finstreamai --destination .cr-release-packages
+
+      - name: Upload chart to GitHub Release
         uses: helm/chart-releaser-action@v1.6.0
         with:
           charts_dir: helm
+          skip_existing: true
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
